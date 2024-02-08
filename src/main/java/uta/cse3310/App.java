@@ -62,8 +62,11 @@ public class App extends WebSocketServer {
   // All games currently underway on this server are stored in
   // the vector ActiveGames
   Vector<Game> ActiveGames = new Vector<Game>();
+  int winsForX = 0;
+  int winsForO = 0;
+  int draw = 0;
 
-  int GameId = 1;
+  int GameId = 0;
 
   public App(int port) {
     super(new InetSocketAddress(port));
@@ -83,7 +86,6 @@ public class App extends WebSocketServer {
     System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected");
 
     ServerEvent E = new ServerEvent();
-
     // search for a game needing a player
     Game G = null;
     for (Game i : ActiveGames) {
@@ -115,6 +117,11 @@ public class App extends WebSocketServer {
     // allows the websocket to give us the Game when a message arrives
     conn.setAttachment(G);
 
+    G.winsForX = winsForX;
+    G.winsForO = winsForO;
+    G.gamesEndedInDraw = draw;
+
+    G.activeGames = ActiveGames.size();
     Gson gson = new Gson();
     // Note only send to the single connection
     conn.send(gson.toJson(E));
@@ -140,7 +147,6 @@ public class App extends WebSocketServer {
   @Override
   public void onMessage(WebSocket conn, String message) {
     System.out.println(conn + ": " + message);
-
     // Bring in the data from the webpage
     // A UserEvent is all that is allowed at this point
     GsonBuilder builder = new GsonBuilder();
@@ -152,6 +158,14 @@ public class App extends WebSocketServer {
     Game G = conn.getAttachment();
     G.Update(U);
 
+    winsForX = G.winsForX;
+    G.winsForX = winsForX;
+    winsForO = G.winsForO;
+    G.winsForO = winsForO;
+    draw = G.gamesEndedInDraw;
+    G.gamesEndedInDraw = draw;
+
+    G.activeGames = ActiveGames.size();
     // send out the game state every time
     // to everyone
     String jsonString;
@@ -197,4 +211,5 @@ public class App extends WebSocketServer {
     System.out.println("websocket Server started on port: " + port);
 
   }
+
 }

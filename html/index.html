@@ -28,6 +28,12 @@
 
     </tr>
 </table>
+<label>Total Number of games played</label> <input type="number" id="gamesPlayed" name="gamesPlayed" readonly><br>
+<label>Number of concurrent games in progress</label> <input type="number" id="concurrentGames" name="concurrentGames" readonly><br>
+<label>Games won by X </label> <input type="number" id="gamesWonByX" name="gamesWonByX" readonly><br>
+<label>Games won by O </label> <input type="number" id="gamesWonByO" name="gamesWonByO" readonly><br>
+<label>Number of games ended in draw </label> <input type="number" id="draw" name="draw" readonly><br>
+
 
 <script>
     var idx = -1;
@@ -37,6 +43,7 @@
         PlayerIdx = 0;
         GameId = 0;
     }
+    
     var connection = null;
 
     var serverUrl;
@@ -58,9 +65,16 @@
     connection.onmessage = function (evt) {
         var msg;
         msg = evt.data;
-
+        
+        
         console.log("Message received: " + msg);
         const obj = JSON.parse(msg);
+
+        document.getElementById("gamesPlayed").value = gameid;  //number of games played
+        document.getElementById("gamesWonByX").value = obj.winsForX; //games won by X
+        document.getElementById("gamesWonByO").value = obj.winsForO; //games won by Y
+        document.getElementById("draw").value = obj.gamesEndedInDraw; //games won by X
+        document.getElementById("concurrentGames").value = obj.activeGames-(obj.winsForX+obj.winsForO+obj.gamesEndedInDraw); //
 
         if ('YouAre' in obj) {
             if (obj.YouAre == "XPLAYER") {
@@ -69,7 +83,7 @@
             else {
                 idx = 1;
             }
-
+            
             gameid = obj.GameId;
         }
         else if ('CurrentTurn' in obj) {
@@ -103,6 +117,6 @@
             U.PlayerIdx = "OPLAYER";
         U.GameId = gameid;
         connection.send(JSON.stringify(U));
-        console.log(JSON.stringify(U))
+        console.log(JSON.stringify(U));
     }
 </script>
