@@ -65,8 +65,9 @@ public class App extends WebSocketServer {
   int winsForX = 0;
   int winsForO = 0;
   int draw = 0;
+  int TotalGame = 0;
 
-  int GameId = 0;
+  int GameId = 1;
 
   public App(int port) {
     super(new InetSocketAddress(port));
@@ -120,6 +121,7 @@ public class App extends WebSocketServer {
     G.winsForX = winsForX;
     G.winsForO = winsForO;
     G.gamesEndedInDraw = draw;
+    G.TotalGame = TotalGame;
 
     G.activeGames = ActiveGames.size();
     Gson gson = new Gson();
@@ -157,7 +159,8 @@ public class App extends WebSocketServer {
     // Get our Game Object
     Game G = conn.getAttachment();
     G.Update(U);
-
+    TotalGame = G.TotalGame;
+    G.TotalGame = TotalGame;
     winsForX = G.winsForX;
     G.winsForX = winsForX;
     winsForO = G.winsForO;

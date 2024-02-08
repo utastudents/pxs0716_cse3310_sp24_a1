@@ -28,7 +28,7 @@
 
     </tr>
 </table>
-<label>Total Number of games played</label> <input type="number" id="gamesPlayed" name="gamesPlayed" readonly><br>
+<label>Total Number of games played</label> <input type="number" id="TotalGame" name="TotalGame" readonly><br>
 <label>Number of concurrent games in progress</label> <input type="number" id="concurrentGames" name="concurrentGames" readonly><br>
 <label>Games won by X </label> <input type="number" id="gamesWonByX" name="gamesWonByX" readonly><br>
 <label>Games won by O </label> <input type="number" id="gamesWonByO" name="gamesWonByO" readonly><br>
@@ -70,11 +70,12 @@
         console.log("Message received: " + msg);
         const obj = JSON.parse(msg);
 
-        document.getElementById("gamesPlayed").value = gameid;  //number of games played
+        document.getElementById("TotalGame").value = obj.TotalGame;  //number of games played
         document.getElementById("gamesWonByX").value = obj.winsForX; //games won by X
         document.getElementById("gamesWonByO").value = obj.winsForO; //games won by Y
         document.getElementById("draw").value = obj.gamesEndedInDraw; //games won by X
-        document.getElementById("concurrentGames").value = obj.activeGames-(obj.winsForX+obj.winsForO+obj.gamesEndedInDraw); //
+        
+        document.getElementById("concurrentGames").value = obj.activeGames-obj.TotalGame; //
 
         if ('YouAre' in obj) {
             if (obj.YouAre == "XPLAYER") {

@@ -10,6 +10,7 @@ public class Game {
     public int winsForO;
     public int gamesEndedInDraw;
     public int activeGames;
+    public int TotalGame;
 
     Game() {
         Button = new PlayerType[9];
@@ -23,6 +24,7 @@ public class Game {
         CurrentTurn = PlayerType.NOPLAYER;
         Msg[0] = "Waiting for other player to join";
         Msg[1] = "";
+        TotalGame = 0;
         winsForX = 0;
         winsForO = 0;
         gamesEndedInDraw = 0;
@@ -110,17 +112,21 @@ public class Game {
                 Msg[0] = "You Win!";
                 Msg[1] = "You Lose!";
                 CurrentTurn = PlayerType.NOPLAYER;
-                winsForX++; // number of games won by X
+                winsForX = winsForX+1;
+                TotalGame = TotalGame +1;
+                // number of games won by X
             } else if (CheckBoard(PlayerType.OPLAYER)) {
                 Msg[1] = "You Win!";
                 Msg[0] = "You Lose!";
                 CurrentTurn = PlayerType.NOPLAYER;
-                winsForO++; // number of games won by Y
+                TotalGame = TotalGame +1;
+                winsForO = winsForO +1; // number of games won by Y
             } else if (CheckDraw(U.PlayerIdx)) {
                 Msg[0] = "Draw";
                 Msg[1] = "Draw";
                 CurrentTurn = PlayerType.NOPLAYER;
-                gamesEndedInDraw++; // number of games ended in a draw
+                gamesEndedInDraw++;
+                TotalGame = TotalGame+1; // number of games ended in a draw
             }
         }
     }
